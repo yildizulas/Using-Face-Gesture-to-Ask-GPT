@@ -1,0 +1,255 @@
+/* style.css */
+
+:root {
+    --primary: #4F46E5;
+    --primary-dark: #4338CA;
+    --background: #0F172A;
+    --surface: #1E293B;
+    --text: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --border: #2D3748;
+    --hover-highlight: rgba(79, 70, 229, 0.2);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+header {
+    padding: 2rem;
+  }
+
+#app {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#cursor {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: red;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  #microphoneButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 0.75rem 1.5rem;
+    font-size: 16px;
+    background: var(--primary);
+    color: var(--text);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    z-index: 1000; /* İmleç üstte görünebilsin */
+}
+
+#microphoneButton:hover {
+    background: var(--primary-dark);
+    transform: scale(1.05);
+}
+
+#gptResponses {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--surface);
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#gptResponses h2 {
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+#responsesList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#responsesList li {
+    font-size: 14px;
+    color: var(--text);
+    background: var(--surface);
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease;
+}
+
+#responsesList li:hover {
+    background-color: var(--hover-highlight);
+}
+
+/* Spinner for loading states */
+#loadingSpinner {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid var(--border);
+    border-top: 5px solid var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.interactive-area {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+  
+  .interactive-btn {
+    background: #FFF;
+    color: #4F46E5;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .interactive-btn:hover {
+    background: #4F46E5;
+    color: #FFF;
+  }
+
+  .hovering {
+    position: relative;
+}
+
+.hovering::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 3px solid yellow;
+    border-radius: 12px;
+    animation: grow-shrink 2s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes grow-shrink {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    #gptResponses {
+        width: 90%;
+        right: 5%;
+    }
+
+    #microphoneButton {
+        font-size: 14px;
+        padding: 0.5rem 1rem;
+    }
+}
+
+#video {
+    position: fixed; /* Sayfa boyunca sabit kalır */
+    top: 0;
+    left: 0;
+    width: 100%; /* Video ekran boyutuna göre tam genişlikte kalır */
+    height: 100%; /* Video tam yüksekliğe uzanır */
+    opacity: 0; /* Görünmez yapar */
+    pointer-events: none; /* Tıklamaları engeller */
+}
+
+#coordinates {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--surface);
+    color: var(--text);
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+  }
+
+  #microphoneButton {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    padding: 0.75rem 1.5rem;
+    font-size: 16px;
+    background: var(--primary);
+    color: var(--text);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  #microphoneButton:hover {
+    background: var(--primary-dark);
+    transform: scale(1.05);
+  }
+  
+  #transcriptArea {
+    position: fixed;
+    bottom: 100px;
+    left: 20px;
+    background: var(--surface);
+    color: var(--text);
+    padding: 15px;
+    border-radius: 8px;
+    max-width: 400px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  #transcriptText {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+  }

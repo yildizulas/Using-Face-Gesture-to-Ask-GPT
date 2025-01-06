@@ -1,0 +1,37 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Burun Hareketleriyle Kontrol Et!</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Burun Hareketleriyle Kontrol Et!</h1>
+    <p>İmleci kullanarak butonlara ulaş ve etkileşime geç.</p>
+  </header>
+  <main>
+    <div class="interactive-area">
+      <button class="interactive-btn" id="button1">Buton 1</button>
+      <button class="interactive-btn" id="button2">Buton 2</button>
+      <button class="interactive-btn" id="button3">Buton 3</button>
+    </div>
+  </main>
+
+  <button id="microphoneButton">🎤 Mikrofon</button>
+  <div id="transcriptArea">
+    <h2>Transkript:</h2>
+    <p id="transcriptText">Henüz bir kayıt alınmadı.</p>
+  </div>
+
+  <div id="cursor"></div>
+  <video id="video" autoplay></video>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils"></script>
+  <script src="eyeTracking.js"></script>
+  <script src="voiceRecorder.js"></script>
+</body>
+</html>
