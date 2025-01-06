@@ -11,27 +11,28 @@
 <body>
   <header>
     <h1>Burun Hareketleriyle Kontrol Et!</h1>
-    <p>İmleci kullanarak butonlara ulaş ve etkileşime geç.</p>
+    <p>İmleci kullanarak GPT yanıtlarını görüntüleyebilir ve mikrofonla etkileşim kurabilirsiniz.</p>
   </header>
+  
   <main>
-    <div class="interactive-area">
-      <button class="interactive-btn" id="button1">Buton 1</button>
-      <button class="interactive-btn" id="button2">Buton 2</button>
-      <button class="interactive-btn" id="button3">Buton 3</button>
+    <button id="microphoneButton">🎤 Mikrofon</button>
+    <div id="transcriptArea">
+      <h2>Transkript:</h2>
+      <p id="transcriptText">Henüz bir kayıt alınmadı.</p>
+    </div>
+    <div id="gptResponses">
+      <h2>GPT Yanıtları:</h2>
+      <ul id="responsesList"></ul>
     </div>
   </main>
-
-  <button id="microphoneButton">🎤 Mikrofon</button>
-  <div id="transcriptArea">
-    <h2>Transkript:</h2>
-    <p id="transcriptText">Henüz bir kayıt alınmadı.</p>
-  </div>
-
+  
   <div id="cursor"></div>
   <video id="video" autoplay></video>
+  
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils"></script>
   <script src="eyeTracking.js"></script>
   <script src="voiceRecorder.js"></script>
+  <script src="gptService.js"></script>
 </body>
 </html>

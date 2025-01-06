@@ -73,7 +73,7 @@ async function processAudio() {
             encoding: "WEBM_OPUS",
             sampleRateHertz: 48000,
             languageCode: "tr-TR", // Türkçe için
-            alternativeLanguageCodes: ["en-US", "de-DE", "fr-FR"],
+            alternativeLanguageCodes: ["en-US"],
           },
           audio: {
             content: audioBase64,
@@ -89,6 +89,7 @@ async function processAudio() {
     if (result.results && result.results.length > 0) {
       const transcriptText = result.results[0].alternatives[0].transcript;
       document.getElementById("transcriptText").textContent = transcriptText;
+      fetchGPTResponse(transcriptText);
     } else {
       console.error("Google API'den transkript alınamadı:", result);
       document.getElementById("transcriptText").textContent = "Transkript alınamadı.";

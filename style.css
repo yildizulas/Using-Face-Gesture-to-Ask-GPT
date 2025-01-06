@@ -32,7 +32,8 @@ body {
 
 header {
     padding: 2rem;
-  }
+    text-align: center;
+}
 
 #app {
     position: relative;
@@ -48,67 +49,7 @@ header {
     background: red;
     border-radius: 50%;
     pointer-events: none;
-  }
-
-  #microphoneButton {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 0.75rem 1.5rem;
-    font-size: 16px;
-    background: var(--primary);
-    color: var(--text);
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    z-index: 1000; /* İmleç üstte görünebilsin */
-}
-
-#microphoneButton:hover {
-    background: var(--primary-dark);
-    transform: scale(1.05);
-}
-
-#gptResponses {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: var(--surface);
-    padding: 1rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    width: 300px;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-#gptResponses h2 {
-    font-size: 18px;
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
-    text-align: center;
-}
-
-#responsesList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-#responsesList li {
-    font-size: 14px;
-    color: var(--text);
-    background: var(--surface);
-    padding: 0.5rem 0.75rem;
-    border-radius: 6px;
-    margin-bottom: 0.5rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.2s ease;
-}
-
-#responsesList li:hover {
-    background-color: var(--hover-highlight);
+    z-index: 9999; /* Her şeyin üstünde görünmesi için */
 }
 
 /* Spinner for loading states */
@@ -204,19 +145,6 @@ header {
     pointer-events: none; /* Tıklamaları engeller */
 }
 
-#coordinates {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: var(--surface);
-    color: var(--text);
-    padding: 10px 15px;
-    border-radius: 8px;
-    font-size: 14px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    z-index: 9999;
-  }
-
   #microphoneButton {
     position: fixed;
     bottom: 20px;
@@ -253,3 +181,46 @@ header {
     font-size: 14px;
     line-height: 1.5;
   }
+
+
+#gptResponses {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--surface);
+    color: var(--text);
+    padding: 15px;
+    border-radius: 8px;
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+#gptResponses h2 {
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+#responsesList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#responsesList li {
+    font-size: 14px;
+    color: var(--text);
+    background: var(--surface);
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease;
+}
+
+#responsesList li:hover {
+    background-color: var(--hover-highlight);
+}
