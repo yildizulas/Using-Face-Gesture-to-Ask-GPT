@@ -1,38 +1,382 @@
-<!-- index.html -->
+ <!-- index.html -->
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Burun Hareketleriyle Kontrol Et!</title>
-  <link rel="stylesheet" href="style.css">
+    <!-- Define character encoding and responsive design for mobile devices -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EyeCare.ai</title>
+
+    <!-- Load fonts from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Link main and TTS-specific stylesheets -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="ttsStyles.css">
+    <style>
+        /* Base styles for the microphone button */
+        .neo-button.mic-button {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0;
+            width: 180px;
+            height: 48px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* Align content inside the button */
+        .mic-button .button-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            z-index: 2;
+        }
+
+        /* Microphone icon styles */
+        .mic-button .mic-icon {
+            width: 20px;
+            height: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Vertical line of the microphone icon */
+        .mic-icon::before {
+            content: '';
+            width: 2px;
+            height: 14px;
+            background: currentColor;
+            position: absolute;
+            border-radius: 1px;
+            transition: height 0.3s ease;
+        }
+
+        /* Circular part of the microphone icon */
+        .mic-icon::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 0;
+            transition: all 0.3s ease;
+        }
+
+        /* Button text styling */
+        .mic-button .button-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--text);
+            opacity: 0.9;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Recording state styles */
+        .mic-button.recording {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.2);
+        }
+
+        .mic-button.recording .mic-icon::before {
+            height: 8px;
+            animation: micPulse 1.5s ease infinite;
+        }
+
+        .mic-button.recording .mic-icon::after {
+            transform: scale(1.1);
+            border-color: var(--primary);
+        }
+
+        /* Button Interaction */
+        .mic-button:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+
+        /* Icon animation during recording */
+        .mic-button:active {
+            transform: translateY(1px);
+        }
+
+        /* Background shimmer animation for button */
+        .mic-button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                45deg,
+                transparent 25%,
+                rgba(var(--primary-rgb), 0.1) 50%,
+                transparent 75%
+            );
+            background-size: 200% 200%;
+            animation: shimmer 3s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mic-button:hover::before {
+            opacity: 1;
+        }
+
+        /* Pulse animation for recording state */
+        @keyframes micPulse {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.5); }
+        }
+
+        /* Shimmer animation for button background */
+        @keyframes shimmer {
+            0% { background-position: -100% -100%; }
+            100% { background-position: 100% 100%; }
+        }
+    </style>
 </head>
-<body>
-  <header>
-    <h1>Burun Hareketleriyle Kontrol Et!</h1>
-    <p>İmleci kullanarak GPT yanıtlarını görüntüleyebilir ve mikrofonla etkileşim kurabilirsiniz.</p>
-  </header>
-  
-  <main>
-    <button id="microphoneButton">🎤 Mikrofon</button>
-    <div id="transcriptArea">
-      <h2>Transkript:</h2>
-      <p id="transcriptText">Henüz bir kayıt alınmadı.</p>
+<body class="dark-mode">
+    <!-- Animated Background -->
+    <!-- Creates an animated background effect for visual appeal -->
+    <div class="animated-bg">
+        <div class="gradient-sphere"></div>
     </div>
-    <div id="gptResponses">
-      <h2>GPT Yanıtları:</h2>
-      <ul id="responsesList"></ul>
+    <div class="interface-grid"></div>
+
+    <!-- Theme Toggle -->
+    <!-- Toggle for switching between light and dark themes -->
+    <div class="theme-toggle">
+        <input type="checkbox" id="theme-switch">
+        <label for="theme-switch" class="toggle-label">
+            <div class="toggle-track">
+                <!-- Sun icon for light mode -->
+                <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="5"/>
+                    <line x1="12" y1="1" x2="12" y2="3"/>
+                    <line x1="12" y1="21" x2="12" y2="23"/>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                    <line x1="1" y1="12" x2="3" y2="12"/>
+                    <line x1="21" y1="12" x2="23" y2="12"/>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                </svg>
+                <!-- Moon icon for dark mode -->
+                <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+            </div>
+            <!-- Toggle switch thumb for visual feedback -->
+            <div class="toggle-thumb"></div>
+        </label>
     </div>
-  </main>
-  
-  <div id="cursor"></div>
-  <video id="video" autoplay></video>
-  
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils"></script>
-  <script src="eyeTracking.js"></script>
-  <script src="voiceRecorder.js"></script>
-  <script src="gptService.js"></script>
+
+    <!-- Main Interface -->
+    <main class="interface">
+        <!-- Header Section -->
+        <header class="interface-header">
+            <div class="logo-section">
+                <div class="logo">
+                    <!-- Logo icon representing the EyeCare.ai brand -->
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5.5C7 5.5 2.73 8.61 1 13c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5Z"/>
+                        <path d="M12 15a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                    </svg>
+                    <h1>EyeCare.ai</h1> <!-- Application title -->
+                </div>
+                <div class="stats">
+                    <!-- Accuracy statistic display -->
+                    <div class="stat">
+                        <div class="stat-value" id="accuracyRate">99.8%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                    <!-- Response time statistic display -->
+                    <div class="stat">
+                        <div class="stat-value" id="responseTime">12ms</div>
+                        <div class="stat-label">Response</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Pulse Animation -->
+            <!-- Visual indicator showing system activity -->
+            <div class="system-pulse">
+                <div class="pulse-ring">
+                    <div class="pulse-dot"></div>
+                </div>
+                <span class="system-status">System Active</span> <!-- Status text -->
+            </div>
+        </header>
+
+        <!-- Main Content Section -->
+        <div class="main-content">
+            <!-- Voice Control Panel -->
+            <div class="control-panel">
+                <!-- Transcript Panel -->
+                <!-- Displays transcribed text from voice input -->
+                <section id="transcriptArea" class="neo-panel transcript-panel">
+                    <div class="panel-header">
+                        <h2>Voice Input</h2>
+                        <div class="panel-status">
+                            <!-- Visual indicators for system readiness -->
+                            <span class="status-indicator"></span>
+                            <span class="status-text">Ready</span>
+                        </div>
+                    </div>
+                    <div class="panel-content">
+                        <!-- Placeholder for the transcribed text -->
+                        <p id="transcriptText">Awaiting voice input...</p>
+                    </div>
+                </section>
+
+                <!-- Microphone Button -->
+                <!-- Button to start/stop voice recording -->
+                <button id="microphoneButton" class="neo-button mic-button centered-button">
+                    <div class="button-glow"></div> <!-- Glow effect around the button -->
+                    <div class="button-content">
+                        <div class="mic-icon"></div> <!-- Microphone icon -->
+                        <span class="button-text">RECORD</span> <!-- Button text -->
+                    </div>
+                </button>
+            </div>
+
+            <!-- Response Panel -->
+            <!-- Displays responses generated by GPT -->
+            <section id="gptResponses" class="neo-panel response-panel">
+                <div class="panel-header">
+                    <h2>Response Matrix</h2>
+                    <div class="panel-status">
+                        <!-- Visual indicators for system status -->
+                        <span class="status-indicator"></span>
+                        <span class="status-text">Online</span>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <ul id="responsesList" class="response-list">
+                        <!-- Default message shown when the system is ready -->
+                        <li class="response-item system-message">
+                            System calibrated and ready for interaction
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Cursor -->
+    <!-- Custom cursor component for eye-tracking interaction -->
+    <div id="cursor" class="eye-cursor">
+        <div class="cursor-ring"></div> <!-- Outer ring of the cursor -->
+        <div class="cursor-dot"></div> <!-- Inner dot of the cursor -->
+    </div>
+
+    <!-- Hidden Video Element -->
+    <!-- Video feed used for eye-tracking functionality -->
+    <video id="video" autoplay muted></video>
+
+    <!-- Loading Overlay -->
+    <!-- Displayed while the application is initializing -->
+    <div class="loading-overlay">
+        <div class="loading-content">
+            <div class="radar-spinner">
+                <div class="radar-sweep"></div> <!-- Rotating sweep effect -->
+                <div class="radar-circle"></div> <!-- Static radar circles -->
+                <div class="radar-circle"></div>
+                <div class="radar-circle"></div>
+                <div class="radar-circle"></div>
+            </div>
+            <div class="loading-text">Initializing EyeCare.ai</div> <!-- Loading message -->
+        </div>
+    </div>
+    
+    <!-- Loading Script -->
+    <script>
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelector('.loading-overlay').classList.add('hidden');
+            }, 2000);
+        });
+    </script>
+
+    <!-- Microphone Button Script -->
+    <script>
+        // Microphone Button Functionality
+        const micButton = document.getElementById('microphoneButton');
+        
+        // Update the microphone button state based on recording status
+        function updateMicButtonState(isRecording) {
+            if (isRecording) {
+                micButton.classList.add('recording'); // Add recording state styles
+                micButton.querySelector('.button-text').textContent = 'STOP'; // Update button text
+            } else {
+                micButton.classList.remove('recording'); // Remove recording state styles
+                micButton.querySelector('.button-text').textContent = 'RECORD'; // Reset button text
+            }
+        }
+
+        // Update initial button state
+        micButton.innerHTML = `
+            <div class="button-glow"></div>
+            <div class="button-content">
+                <div class="mic-icon"></div>
+                <span class="button-text">RECORD</span>
+            </div>
+        `;
+
+        // Add click handler
+        micButton.addEventListener('click', () => {
+            updateMicButtonState(!micButton.classList.contains('recording'));
+        });
+    </script>
+
+    <!-- Scripts -->
+    <!-- Import MediaPipe libraries for face tracking and camera utilities -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh"></script> <!-- Face mesh tracking -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils"></script> <!-- Camera utilities -->
+
+
+    <!-- Import custom JavaScript files -->
+    <script src="eyeTracking.js"></script> <!-- Handles eye-tracking functionality -->
+    <script src="ttsService.js"></script> <!-- Text-to-speech functionality -->
+    <script src="voiceRecorder.js"></script> <!-- Manages voice recording -->
+    <script src="gptService.js"></script> <!-- Handles GPT-generated responses -->
+
+    <!-- Theme Toggle Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeSwitch = document.getElementById('theme-switch');
+            const body = document.body;
+
+            // Check for saved theme preference
+            // Retrieves the user's last saved theme from local storage
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                body.className = savedTheme; // Apply the saved theme
+                themeSwitch.checked = savedTheme === 'light-mode'; // Sync toggle button state
+            }
+
+            // Theme toggle handler
+            themeSwitch.addEventListener('change', () => {
+                if (themeSwitch.checked) {
+                    body.className = 'light-mode'; // Apply light theme
+                    localStorage.setItem('theme', 'light-mode'); // Save theme to local storage
+                } else {
+                    body.className = 'dark-mode'; // Apply dark theme
+                    localStorage.setItem('theme', 'dark-mode'); // Save theme to local storage
+                }
+            });
+        });
+    </script>
+
+    <!-- System Message Container -->
+    <div id="systemMessages" class="system-messages"></div>
 </body>
 </html>
